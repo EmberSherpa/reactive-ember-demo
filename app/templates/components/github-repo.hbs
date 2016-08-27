@@ -1,0 +1,13 @@
+
+<button {{action 'showTab' 'info'}}>Info</button>
+<button {{action 'showTab' 'issues'}}>Issues ({{openIssues}})</button>
+
+{{#if showInfo}}
+  Organization: {{organization}}
+{{else if showIssues}}
+  {{github-repo/issues
+    repo=repo  
+  }}
+{{else}}
+  What tab is this supposed to be you silly person?
+{{/if}}

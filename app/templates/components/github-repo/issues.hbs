@@ -1,0 +1,8 @@
+<ul>
+{{#each issues as |issue|}}
+  <li>
+    <h3><a href={{issue.html_url}}>{{issue.title}}</a></h3>
+    <p>Submited by {{issue.user.login}}</p>    
+  </li>
+{{/each}}
+</ul>
