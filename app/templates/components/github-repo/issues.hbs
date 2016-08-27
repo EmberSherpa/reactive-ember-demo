@@ -1,11 +1,19 @@
+<button {{action 'toggleShowSelection'}}>
+  {{if allowSelection 'Disable' 'Enable'}} Selection
+</button>
+<button {{action 'toggleShowPullRequests'}}>
+  {{if showPullRequests 'Hide' 'Show'}} Pull Requests
+</button>
 <ul>
 {{#each issuesWithSelection as |issue|}}
   <li>
     <h3>
-      <input type="checkbox"
-             onclick={{action 'toggleSelection' issue.original}}
-             checked={{issue.isSelected}}
-      >
+      {{#if allowSelection}}
+        <input type="checkbox"
+              onclick={{action 'toggleSelection' issue.original}}
+              checked={{issue.isSelected}}
+        >
+      {{/if}}
       <a href={{issue.html_url}}>{{issue.title}}</a>
     </h3>
     <p>Submited by {{issue.user.login}}</p>    

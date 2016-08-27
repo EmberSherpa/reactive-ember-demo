@@ -7,8 +7,6 @@ const {
   assign
 } = Ember;
 
-
-
 export default Ember.Component.extend({
   ajax: service(),
   
@@ -35,10 +33,22 @@ export default Ember.Component.extend({
     this.set('issues', result);
   }),
 
-  issuesWithSelection: computed('issues.[]', 'selected.[]', function(){
+  filteredIssuesByPullRequest: computed('issues.[]', 'showPullRequests', function(){
+    let issues = this.get('issues');
+    let showPullRequests = this.get('showPullRequests');
+
+    if (showPullRequests) {
+      return issues;
+    }    
+
+    return issues.filter( ({ pull_request }) => !pull_request );
+  }),
+
+  issuesWithSelection: computed('filteredIssuesByPullRequest.[]', 'selected.[]', function(){
+    let issues = this.get('filteredIssuesByPullRequest');
     let selected = this.get('selected');
 
-    return this.get('issues').map((issue) => {
+    return issues.map((issue) => {
       return assign({}, issue, {
         original: issue,
         isSelected: selected.includes(issue)
@@ -55,6 +65,15 @@ export default Ember.Component.extend({
       } else {
         selected.pushObject(issue);
       }
+    },
+    toggleShowSelection() {
+      this.setProperties({
+        selected: [],
+        allowSelection: !this.get('allowSelection')
+      });
+    },
+    toggleShowPullRequests() {
+      this.toggleProperty('showPullRequests');
     }
   }
 });
