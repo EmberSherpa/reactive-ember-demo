@@ -1,17 +1,27 @@
-<button {{action 'toggleShowSelection'}}>
+{{shhh (compute (perform fetchIssues page))}}
+{{let selected (array)
+      page 1
+}}
+
+<input type="text" value={{page}} oninput={{action (r/mut page) value="target.value"}}>
+
+<button {{action (pipe 
+  (toggle "allowSelection" this) 
+  (action (mut selected) (array))
+)}}>
   {{if allowSelection 'Disable' 'Enable'}} Selection
 </button>
-<button {{action 'toggleShowPullRequests'}}>
+<button {{action (toggle "showPullRequests" this)}}>
   {{if showPullRequests 'Hide' 'Show'}} Pull Requests
 </button>
 <ul>
-{{#each issuesWithSelection as |issue|}}
+{{#each (without (if showPullRequests (array) (filter-by "pull_request" issues)) issues) as |issue|}}
   <li>
     <h3>
       {{#if allowSelection}}
         <input type="checkbox"
-              onclick={{action 'toggleSelection' issue.original}}
-              checked={{issue.isSelected}}
+              onclick={{action (pipe (if (contains issue selected) (pipe (r 'without' issue selected) (r/mut selected)) (r 'append' selected))) issue}}
+              checked={{contains issue selected}}
         >
       {{/if}}
       <a href={{issue.html_url}}>{{issue.title}}</a>
