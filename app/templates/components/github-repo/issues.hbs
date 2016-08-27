@@ -1,7 +1,13 @@
 <ul>
-{{#each issues as |issue|}}
+{{#each issuesWithSelection as |issue|}}
   <li>
-    <h3><a href={{issue.html_url}}>{{issue.title}}</a></h3>
+    <h3>
+      <input type="checkbox"
+             onclick={{action 'toggleSelection' issue.original}}
+             checked={{issue.isSelected}}
+      >
+      <a href={{issue.html_url}}>{{issue.title}}</a>
+    </h3>
     <p>Submited by {{issue.user.login}}</p>    
   </li>
 {{/each}}
